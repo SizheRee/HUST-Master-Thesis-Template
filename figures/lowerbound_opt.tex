@@ -1,0 +1,42 @@
+\begin{tabular}{cc}
+% 第一行
+
+\begin{minipage}[b]{0.5\textwidth} \subfloat[$OPT$情况1]{
+\label{fig:opt_1}
+\centering
+\begin{tikzpicture}[scale=0.5]
+\input{figures/lowerbound_common}
+
+\draw (2,6) -- (8, 0) node[below] {$t+s$};
+
+\coordinate (i) at (2,6);
+
+\draw (i|- 0,12) node[pnode]  {};
+\draw (i|- 0,10) node[pnode]  {};
+\draw (i|- 0,11) node {\large$p_i$};
+
+\end{tikzpicture}}
+\end{minipage}\hfil &
+
+\begin{minipage}[b]{0.5\textwidth} \subfloat[$OPT$情况2]{
+\label{fig:opt_2}
+\centering
+\begin{tikzpicture}[scale=0.5]
+\input{figures/lowerbound_common}
+
+\coordinate (p) at (6,2);
+\coordinate (i) at (2,6);
+
+\draw (i) -- (p);
+\draw[dashed] (p) -- (6,0) node[below] {$t+x$};
+
+\draw[red,line width=2pt] (p) -- (p|-0,8) node[black, right] {};
+\draw (p) -- ++(45:0.3cm) sin ++(45:0.3cm) cos ++(45:0.3cm) sin ++(45:0.3cm) cos ++(45:0.3cm) sin ++(45:0.3cm) cos ++(45:0.3cm) sin ++(45:0.3cm) cos ++(45:0.3cm);
+
+\draw (i|- 0,12) node[pnode]  {} (i|- 0,10) node[pnode]  {} (p |- 0,12) node[pnode]  {} (p |- 0,10) node[pnode] {};
+\draw (i|- 0,11) node {\large$p_i$} (p|-0,11) node {\large$p_{i+1}$};
+
+\end{tikzpicture}}
+\end{minipage} \\
+
+\end{tabular}

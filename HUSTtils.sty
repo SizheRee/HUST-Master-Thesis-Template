@@ -1,0 +1,146 @@
+\ProvidesPackage{HUSTtils}[2006/03/27 2.2 any packages you would
+like to use]
+\usepackage{multirow,booktabs,soul}
+\usepackage{makecell}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{amssymb,color}
+
+% pdfpages，pdf页面控制。插入独创性声明电子版
+\usepackage{pdfpages}
+
+% 伪代码环境设置
+\usepackage[linesnumbered,  ruled,  vlined]{algorithm2e}
+\usepackage{algpseudocode}
+% 伪代码输入输出不要有缩进
+\SetKwInput{KwIn}{\hspace{-1.5em}输入}
+\SetKwInput{KwOut}{\hspace{-1.5em}输出}
+
+
+% 将arg设置为等宽字体且不需要加粗
+\SetArgSty{texttt}
+
+% 减少伪代码中的空行
+\SetAlgoNoEnd
+\DontPrintSemicolon
+% \makeatletter
+% \newcommand{\RemoveAlgoShortEndLine}{\algocf@addskiptotal@shortendline{}}
+% \makeatother
+
+\renewcommand{\algorithmcfname}{算法}
+\usepackage{chngcntr}
+\counterwithin{algocf}{chapter}
+\renewcommand{\thealgocf}{\thechapter-\arabic{algocf}}
+
+% 设置行号为5号
+\SetAlgoNlRelativeSize{0}
+\SetNlSty{}{}{:~\fontsize{10}{12}\selectfont\rmfamily}
+
+\usepackage{url}
+\definecolor{hl}{rgb}{0.75,0.75,0.75}
+\sethlcolor{hl}
+\usepackage{natbib}
+\newcommand{\lcite}[1]{{\setcitestyle{numbers,square}\cite{#1}}}
+
+
+% 不同于~|\mathcal| or |\mathfrak| 之类的英文花体字体
+%\RequirePackage{mathrsfs}
+
+
+% 确定浮动对象的位置，可以使用~H，强制将浮动对象放到这里（可能效果很差）
+%\RequirePackage{float}
+\usepackage{enumitem}
+\setlist[enumerate]{align=left, labelsep=0.2pt, itemindent=4em, leftmargin=0em}
+
+\setlist[enumerate]{itemindent={4em}}
+
+% 浮动图形控制宏包。
+% 允许上一个~section 的浮动图形出现在下一个~section 的开始部分
+% 该宏包提供处理浮动对象的~|\FloatBarrier| 命令，使所有未处
+% 理的浮动图形立即被处理。这三个宏包仅供参考，未必使用：
+ % \RequirePackage[below]{placeins}
+ % \RequirePackage{floatflt} % 图文混排用宏包
+ % \RequirePackage{rotating} % 图形和表格的控制旋转
+ % 引用子图
+% \usepackage{subcaption}
+
+\usepackage{bibentry}
+
+% For tikz
+\usepackage{physics}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{mathdots}
+\usepackage{yhmath}
+\usepackage{cancel}
+\usepackage{color}
+\usepackage{siunitx}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{amssymb}
+\usepackage{gensymb}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usetikzlibrary{fadings,patterns,shadows.blur}
+\usetikzlibrary{shapes, arrows, automata}
+\usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{decorations.pathreplacing}
+
+% for Graphviz
+\usepackage{dot2texi}
+
+% 表格
+%\RequirePackage{multirow}
+\RequirePackage{longtable}
+% 表格中的字体比正文小半号，为大五号，11pt，同时表格中的行距为 1.4 倍行距
+\let\HUST@longtable\longtable
+\renewcommand\longtable{\dawu[1.4]\HUST@longtable}
+\let\endHUST@longtable\endlongtable
+
+%\RequirePackage[all]{xy}
+\RequirePackage{overpic}
+%\RequirePackage{psfrag}
+
+% 给自定义的宏后面自动加空白
+\RequirePackage{xspace}
+
+% 定义证明最后是黑色方块
+% \renewcommand{\qedsymbol}{\ensuremath{\blacksquare}}
+
+% 定义自己常用的东西
+\newcommand{\Nat}{{\mathbb N}}
+\newcommand{\Real}{{\mathbb R}}
+\newcommand{\sI}{{\mathcal I}}
+\newcommand{\sL}{{\mathcal L}}
+\newcommand{\sF}{{\mathcal F}}
+\newcommand{\sC}{{\mathcal C}}
+\newcommand{\sS}{{\mathcal S}}
+\newcommand{\sA}{{\mathcal A}}
+\newcommand{\sP}{{\mathcal P}}
+\newcommand{\sO}{{\mathcal O}}
+\newcommand{\OPT}{\mathrm{OPT}}
+\newcommand{\ALG}{\mathrm{ALG}}
+% \newcommand{\OR}{\mathrm{OR}}
+\newcommand{\PTAS}{\mathrm{PTAS}}
+\newcommand{\APTAS}{\mathrm{APTAS}}
+
+
+%\newcommand{\china}{中华人民共和国}
+\usepackage{mathtools}
+% \DeclarePairedDelimiter{\eceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\DeclarePairedDelimiter\parent{(}{)}
+
+\newcommand{\ve}{\varepsilon}
+\newcommand{\ep}{\epsilon}
+\newcommand{\bpi}{$\textbf{PI}$\xspace}
+\newcommand{\ralgo}{RDSA\xspace}
+\newcommand{\TOPI}{TOPI\xspace}
+\newcommand{\OPTE}{$\textsc{Match}_{even}$\xspace}
+\newcommand{\OPTO}{$\textsc{Match}_{odd}$\xspace}
+\newcommand{\Inter}{$\texttt{Internal}$\xspace}
+\newcommand{\Exter}{$\texttt{External}$\xspace}
+\newcommand{\tlr}{\tilde{R}}
+
+\endinput

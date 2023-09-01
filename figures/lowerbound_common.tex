@@ -1,0 +1,21 @@
+\tikzset{
+  pnode/.style={
+    circle, 
+    draw,
+    fill=black,
+    inner sep=1.5pt,
+    outer sep=0pt
+  }
+}
+\draw[->] (0,0) -- (11,0);
+\draw[->] (0,0) -- (0,9) node[above left] {状态值};
+\draw (9.5, 0)node[below right] {时间};
+\draw[red, line width=2pt] (2,0) -- (2,6) node[black, right] {};
+\draw[dashed] (0,8) -- (11,8);
+\draw (2,0) node[below] {$t$};
+% \draw (2,2.5) node[left] {$s(t)$};
+\filldraw [black] (0,8) circle[radius=2pt];
+\draw (0,8) node[left] {$1$};
+\draw[dashed] (0, 6)node [left] {$s$} -- +(2,0) ;
+\draw[dash pattern=on 3pt off 3pt on 1pt off 3pt] (0,10) -- (10,10) node[right] {$a$};
+\draw[dash pattern=on 3pt off 3pt on 1pt off 3pt] (0,12) -- (10,12) node[right] {$b$};

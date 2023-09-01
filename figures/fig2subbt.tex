@@ -1,0 +1,63 @@
+\begin{tikzpicture}[x=3pt,y=3pt,yscale=4,xscale=4, baseline=(current bounding box.north)]
+    
+
+\coordinate (t) at (2,0);
+\coordinate (tst) at (7,0);
+
+\draw[->] (0,0)--(16.5,0) node[right, font=\song]{时间};
+\draw[->] (0,5)--(16.5, 5) node[right, font=\song]{时间};
+\draw[->] (0,0)--(0,4.5) node[left, xshift=-5pt, font=\song]{状态值};
+\draw[->] (0,5)--(0,9.5) node[left, xshift=-5pt, font=\song]{状态值}; 
+
+\draw[dash pattern=on 3pt off 3pt on 1pt off 3pt] (0,-1) -- ++(16, 0) node [right] {$a$} (0,-2) -- ++(16, 0) node [right] {$b$}; 
+
+% \draw [loosely dashed] (0, 2) node [left]{$1$} -- ++(12, 0) (12, 4) node [left]{$2$}-- (16, 4); 
+
+\draw [loosely dashed] (0, 4) node [left]{$1$} -- ++(16, 0) 
+                       (0, 9) node [left]{$1$} -- ++(16, 0);    
+
+
+\draw (0, 9) coordinate (a) 
+        -- ([turn]-135:3.478399)  coordinate (b)
+        -- ([turn]90:2.8453)coordinate (c)
+        --([turn]-90:2.8453) coordinate (d)
+        --([turn]90:3.5) coordinate (f1)
+        (12, 9) -- ++(4, -4);
+
+\draw [red, line width=2.25] (0, 5) -- (a) 
+        (b) -- (b|-0,9)
+        (c) -- (c|-0,5)
+        (d) -- (d|-0,9)
+        (a|-0,0) -- (a|-0,4)
+        (b|-0,0) -- (b|-0,2.4596)
+        (c|-0,0) -- (c|-0,3.5524)
+        (d|-0,0) -- (d|-0,2.4476)
+        (12, 5) -- ++(0, 4)
+        (12, 0) -- ++(0, 4);
+
+\draw [fill] (b|-0,2.4596) circle (0.3pt) (c|-0,3.5524) circle (0.3pt) (d|-0,2.4476) circle (0.3pt) ;
+
+\draw [fill=none] (0, 4)  -- ([turn]-135:3.478399) circle (0.4pt)   
+        (2.4596, 2.4596) -- ++(0.001, 0) 
+        -- ([turn]-45:2.8453) circle (0.4pt)
+        (4.4716, 3.5524) -- ++(0.001, 0)
+        --([turn]-45:2.8453) circle (0.4pt)
+        (6.4716, 2.4476) -- ++(0.001, 0)
+        --([turn]-45:3.5) 
+        (12, 4) -- ++(4,-4);
+
+
+
+\coordinate (e) at (12, 0); 
+
+\foreach \i\p in {1/a,2/b,3/c,4/d,5/e}{
+    \fill (\p |- 0, -1) circle (0.5pt) node [below left] {}
+        (\p |- 0, -2) circle (0.5pt) node [below left] {}; 
+    \draw (\p |- 0, -1.5) node [anchor=east, xshift=0.2] {$p_{\i}$};
+}
+
+\draw [color=green, dashed] (f1|-0, 10) -- (f1|-0,-2); 
+\draw (f1|-0,-1.7) node [below]  {$t_u$};
+\draw [decorate, decoration = {brace, mirror}] (a|- 0,-2.8) --  (f1|- 0,-2.8) node [midway, below][yshift=-2pt][font=\large] {$L_f$};
+
+\end{tikzpicture}   

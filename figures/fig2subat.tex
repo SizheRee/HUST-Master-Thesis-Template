@@ -1,0 +1,49 @@
+
+\begin{tikzpicture}[x=3pt,y=3pt,yscale=4,xscale=4]
+    
+
+\coordinate (t) at (2,0);
+\coordinate (tst) at (7,0);
+
+\draw[->] (0,0)--(16,0) node[right, font=\song]{时间};
+\draw[->] (0,0)--(0,10) node[above left, font=\song]{成本}; 
+\draw[->] (12,0)--(12,10); 
+
+\draw[dash pattern=on 3pt off 3pt on 1pt off 3pt] (0,-1) -- ++(16, 0) node [right] {$a$} (0,-2) -- ++(16, 0) node [right] {$b$}; 
+\draw [loosely dashed] (0, 2) node [left]{$1$} -- ++(12, 0) (12, 4) node [left]{$2$}-- (16, 4); 
+
+% even(t)
+\draw (0, 0) coordinate (a) 
+        -- ([turn]150:5.5) coordinate (b) 
+        -- ([turn]-60:2.5) coordinate (c)
+        -- ([turn]60:4.5) coordinate (d) 
+        -- ([turn]-60:3.5)
+        (12, 0) -- (14, 4) -- ++(2,0);
+
+% odd(t)
+\draw [color=orange] (0, 2) -- ([turn]-90:2.4596) 
+        -- ([turn]60:5.59) 
+        -- ([turn]-60:2.012)
+        -- ([turn]60:4.8) coordinate (f1)
+        -- ([turn]-60:1.6)
+        (12, 2) -- ++(4, 0);
+
+\coordinate (f) at (12, 0); 
+
+\foreach \i\p in {1/a,2/b,3/c,4/d, 5/f}{
+    \fill (\p |- 0, -1) circle (0.5pt) node [below left] {}
+    (\p |- 0, -2) circle (0.5pt) node [below left] {}; 
+    \draw (\p |- 0, -1.5) node [anchor=east, xshift=0.2] {$p_{\i}$};
+}
+
+
+
+\draw [color=green, dashed] (f1|-0, 10) -- (f1|-0,-2); 
+\draw (f1|-0,-1.7) node [below]  {$t_u$};
+\draw [decorate, decoration = {brace, mirror}] (a|- 0,-2.8) --  (f1|- 0,-2.8) node [midway, below][yshift=-2pt][font=\large] {$f$};
+
+\matrix [draw,below left,outer sep=0pt,inner sep=1.5pt] at (current bounding box.north east) {
+  \draw (0,0) -- (1.5,0); & \node [right][font=\small] {$even(t)$}; \\
+  \draw [color=orange] (0,0) -- (1.5,0); & \node [right][font=\small]{$odd(t)$};\\
+};
+\end{tikzpicture}

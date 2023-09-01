@@ -1,0 +1,481 @@
+\chapter{两源带延迟最小代价完美匹配的随机近似}
+
+
+\section{最优解的结构分析} \label{sec:3-optimal}
+
+\begin{figure}[ht]
+    \centering
+    \begin{minipage}{0.7\textwidth}
+        \subfloat[成本函数$odd(t)$和$even(t)$]{
+            \input{figures/fig2subat}
+            \label{fig:costfunction}
+        }
+    \end{minipage}
+    \centering
+    \begin{minipage}{0.7\textwidth}
+        % \centering
+        \subfloat[状态函数$s(t)$]{
+            \input{figures/fig2subbt} 
+            \label{fig:statefunction}
+        }
+    \end{minipage}
+    \caption{成本函数$odd(t)$，$even(t)$ 和状态函数$s(t)$}
+    \label{fig:Cost_State}
+\end{figure}
+
+接下来，对每个独立片段都可以定义其\emph{状态函数}：
+\begin{equation*}
+    s(t) = 
+    \left\{
+    \begin{aligned}
+        & \frac{odd(t) - even(t) + 1}{2} & \text{若$d$为奇}, \\
+        & \frac{even(t) - odd(t) + 1}{2} & \text{若$d$为偶}
+    \end{aligned}
+    \right.
+\end{equation*}
+假设片段开始为$0$时刻，$d$是到$t$时刻为止（包括$t$时刻）所到达的请求对数量。在图~\ref{fig:phase_partition}中展示了一个样例，七个请求对的序列被划分为$3$个独立片段。在每个独立片段的每个请求对中，红色线段的长度等于该请求对的状态值。
+
+\begin{figure}[htb]
+    \centering
+    \input{figures/phase_partition}
+    \caption{独立片段识别样例}
+    \label{fig:phase_partition}
+\end{figure}
+
+注意到算法~\ref{alg:PhaseIdentification}中使用请求对的状态值来识别独立片段，下面将状态值和状态函数之间建立联系，即证明$s(t_i) = S_i$ 。
+
+
+\begin{lemma}\label{state-value}
+对任意独立片段$f=(f_1, \cdots, f_k)$和其中的任一请求对$f_1 \leq i \leq f_k$, 有$s(t_i) = S_i$。
+\end{lemma}
+\begin{proof}
+考虑 $i\ge 2$。如果 $i - f_1$ 是奇数，在时间区间 $(t_{i-1},t_i]$ 内，$odd(\cdot)$ 不变，而 $even(\cdot)$ 增加了 $2l_{i-1}$。因此可推出，
+\begin{align*}
+    s(t_i) & = (even(t_i) - odd(t_i) + 1)/2
+     = (even(t_{i-1}) + 2l_{i-1} - odd(t_{i-1}) + 1)/2\\
+    & = 1 - (odd(t_{i-1}) - even(t_{i-1}) + 1)/2 + l_{i-1}
+     = 1 - s(t_{i-1}) + l_{i-1}.
+\end{align*}
+
+对于每个独立片段 $f =(f_1,\cdots,f_k)$，状态函数在时间间隔 $[t_{i-1},t_i]$ 中以单位速率减少。在最后一对 $f_k$ 独立片段之后，令 $t_u$ 为状态函数最早变为 $0$ 的时刻，即 $s(t_u) = 0$。显然，$t_u = t_{f_k} + s(f_k)$。为了完善定义，在 $t_u$ 之后，让 $s(\cdot)$ 保持 $0$，直到下一个独立片段开始。称 $t_u$ 为独立片段 $f$ 的结束时间。由此可以定义几何量 $L_f := t_u - t_{f_1}$ 为独立片段 $f$ 的长度。证毕。
+\end{proof}
+
+可以发现，对于每个独立片段$f =(f_1,\cdots,f_k)$，状态函数在时间间隔$[t_{i-1},t_i]$中以单位速率减少。在最后一对$f_k$独立片段之后，令$t_u$为状态函数最早变为$0$的时刻，也就是$s(t_u) = 0$。 显然，$t_u = t_{f_k} + s(f_k)$。为了完善定义，在$t_u$之后，让$s(\cdot)$保持$0$，直到下一个独立片段开始。称$t_u$为独立片段$f$的结束时间。由此可以定义几何量$L_f := t_u - t_{f_1}$为独立片段$f$的长度。
+
+在前文的基础上，定义了一个离线算法\TOPI（独立片段识别算法）。该算法的输入是一个序列，首先使用算法\ref{alg:PhaseIdentification}获得独立片段。对于每个独立片段，如果它是一个独立偶片段，则使用\OPTE 进行处理；否则采用\OPTO 处理。以下定理证明算法\TOPI 是最优的。
+\begin{theorem}
+\label{thm:algorithmPI}
+    独立片段识别算法 \TOPI 为 2-MPMD 问题的最优离线算法。
+\end{theorem}
+
+\begin{proof}
+考虑一个序列$R_p = (p_1, \cdots, p_n)$。定义一个切片序列$R[i]$为包含前$i$个请求对的子序列，即$R[i] := (p_1, p_2, \cdots, p_i)$。令$R[0]$表示空序列。
+对于任意切片序列$R[i]$，如果\TOPI 能在其上产生最优解，则称该切片序列是可验证的。同时，令$TOPI(R[i])$表示\TOPI 在$R[i]$上的解所产生的总成本。接下来归纳法作进行证明。
+
+\textsl{基础情形：}
+$TOPI(R[0]) = 0$，且 $TOPI(R[1]) = Cost(\{\Inter(p_1)\})$，
+$R[0]$和$R[1]$是可验证的。
+
+\textsl{归纳假设：}假设 $R[i-1]$ 和 $R[i-2]$ 都是可验证的。
+
+\textsl{归纳证明：}
+现在验证 $R[i]$。考虑序列 $R[i]$中最后一个请求对$p_i$。令 $f=(f_1,\cdots,f_k)$ 为 \TOPI 算法在解 $R[i]$ 中包含 $p_i$ 的独立片段。由于 $R[i]$ 的最优解必须匹配请求对 $q_j$，因此存在两种可能的匹配情况：
+\renewcommand{\labelenumi}{(\arabic{enumi})}
+\begin{enumerate}[align=left, labelsep=0.3em, itemindent=2em, leftmargin=0em]
+    \item {
+        \label{enu:casea}
+        $\OPT$ 外部匹配$p_{i-1}$ 和 $p_i$，之后 $\OPT(R[i])=TOPI(R[i-2]) + 2l_{i-1}$。
+    }
+    \item {
+        \label{enu:caseb}
+        $\OPT$ 内部匹配$p_i$ ，之后 $\OPT(R[i])=TOPI(R[i-1]) + 1$。
+    }
+\end{enumerate}
+
+注意算法~\ref{alg:PhaseIdentification}中，当一个新的请求对到达时，有两个不同的选项:
+\renewcommand{\labelenumi}{(\alph{enumi})}
+\begin{enumerate}[align=left, labelsep=0.3em, itemindent=2em, leftmargin=0em]
+    \item {
+        \label{enu:decisiona}
+        将其添加到当前片段中，然后通过子程序执行$\Exter(p_{i-1}, p_i)$。这对应于情况(\ref{enu:casea})，即$TOPI(R[i]) = TOPI(R[i-2]) + 2l_{i-1}$。
+    }\item{
+        \label{enu:decisionb}
+        开始一个新的片段，然后通过子程序执行$\Inter(p_{i})$。这对应于情况(\ref{enu:caseb})，即$TOPI(R[i]) = TOPI(R[i-1]) + 1$。
+    }
+\end{enumerate}
+
+考虑在独立片段$f$中的最后一对点$p_i$。不失一般性，假设$i-f_1$是奇数。需要证明\TOPI 对于$p_i$的决策是最优的。
+假设对于$p_i$选择了选项(\ref{enu:decisiona})。根据子程序~\ref{alg:PhaseIdentification}，条件$l_{i-1} < s(t_{i-1})$成立。 
+
+因此可推出，
+\begin{align}
+     &  &  l_{i-1} & < s(t_{i-1})  \nonumber\\
+     & \Rightarrow & even_f(t_{i-1}) - odd_f(t_{i-1}) & < 1 - 2l_{i-1} \nonumber\\
+     & \Rightarrow & even_f(t_{i-2}) - odd_f(t_{i-1}) & < 1 - 2l_{i-1} \label{eq:oddeven}
+\end{align}
+
+依据假设$i-f_1$为奇数，因此$R[i-2]$为独立偶片段,$R[i-1]$为独立奇片段。此前定义有\TOPI 在独立片段的成本函数，对应为$even_f(t_{i-2})$和$odd_f(t_{i-1}$，因此可推出：
+\begin{align}
+    & even_f(t_{i-2}) - odd_f(t_{i-1})=TOPI(R[i-2]) - TOPI(R[i-1])
+    \label{eq:topi}
+\end{align}
+
+结合不等式\ref{eq:oddeven}和等式\ref{eq:topi}，有：
+\begin{align}
+     TOPI(R[i-2]) + 2l_{i-1} &< TOPI(R[i-1]) + 1 \label{eq:topi2}
+\end{align}
+即选项(\ref{enu:decisiona})比选项(\ref{enu:decisionb})更好。
+
+因此，算法\TOPI 对每一个请求对始终选择最优匹配，最终产生最优解。证毕。
+\end{proof}
+
+注意到从算法\ref{alg:PhaseIdentification}中得到的片段是与成本无关的。全局最优解等于每个独立片段的局部最优解的组合。这也是“独立片段”这个术语的起源。对于单个独立片段，下面的引理表明其长度等于其最优解的成本。这个结论在后续的随机算法竞争分析中非常有用。
+
+\begin{lemma}
+\label{lem:Phase_Length}
+任一独立片段$f$均满足其长度等于其最优解的成本，即$L_f=Cost_{OPT}(f)$。
+\end{lemma}
+ 
+\begin{proof}
+假设有一个独立片段 $f = (f_1, f_2, \cdots, f_k)$，其中应用了两个子程序\OPTO 和\OPTE。两个程序分别计算$f$的偶成本函数和奇成本函数，表示为$even_{f}(t)$和$odd_{f}(t)$。注意到 $odd_f(t_{f_1}) = 1$ 和 $even_f(t_{f_1}) = 0$ 。在时间$t_{f_1}$到$t_{f_k}$之间，其中一个函数按照速度$2$增长，而另一个保持不变。
+
+\OPTO 和\OPTE 在$k$为奇数和偶数时分别产生一个$f$的解。如果$k$是奇数，$odd_f(t_{f_k})$等于$Cost_{OPT}(f)$。
+因此可推出：
+\begin{align*}
+& & odd_f(t_{f_k}) + even_f(t_{f_k}) &= 1 + 2*(t_{f_k} - t_{f_1}) \\
+& \Rightarrow & s(t_{f_k}) + (t_{f_k} - t_{f_1}) &= odd_f(t_{f_k}) \\
+& \Rightarrow & L_f &= odd_f(t_{f_k})
+\end{align*}
+如果$k$是偶数，可以通过交换上面的$even$和$odd$符号作等价证明。证毕。
+\end{proof}
+
+\section{2-竞争的状态化随机延迟算法} \label{sec:3-ralgo}
+本节介绍了状态化随机延迟算法（Randomized Delaying State-based Algorithm，\textsc{RDSA}），通过基于状态值的随机延迟决策，该算法可高效处理请求对序列，其竞争比被证明为$2$。同时提出了\ralgo 的广义版本，适用于原始输入序列，并保证了竞争比为$2$。
+
+\subsection{状态化随机延迟算法} \label{subsec:rdsa}
+
+\begin{algorithm}
+\caption{状态化随机延迟算法 \ralgo}
+\label{alg:randomizedalgo}
+\KwIn{在线输入请求对}
+\KwOut{匹配解 $M$}
+初始化$S_1 \leftarrow 1.$\\
+\While{算法空闲时，在时刻$t(p_i)$接收请求对$p_i$}{
+    $S_i \leftarrow \min\{1-S_{i-1}+l_{i-1}, 1\}$\\
+    采样$X_i \sim \mathbf{U}(0, S_i)$\\
+    \eIf{在时间段$( t(p_i), t(p_i)+X_i ]$接收请求对$p_{i+1}$ }{
+        $ S_{i+1} \leftarrow \min\{1-S_{i}+l_{i}, 1\}$\\
+        $M$ add $\Exter(p_i, p_{i+1})$ at time $t(p_{i+1})$\\
+    }{
+        $M$ add $\Inter(p_i)$ at time $t(p_i)+X$\\
+    }
+}
+\Return {$M$.}
+\end{algorithm}
+算法~\ref{alg:PhaseIdentification} 在接收到每个请求对 $p_i$ 时会在线计算其状态值 $S_i$。若\ralgo 在空闲时接收请求对 $p_i$，从 $0$ 到 $S_i$ 中均匀采样值 $X_i$，然后将请求对 $p_i$ 延迟 $X_i$ 秒。如果下一对 $p_{i+1}$ 在不晚于 $t(p_i)+X_i$ 时刻到达，则 \ralgo 会在 $t(p_{i+1})$ 时刻执行 $\Exter(p_i, p_{i+1})$。否则，\ralgo 将在 $t(p_i)+X$ 时刻执行 $\Inter(p_i)$。
+
+由于随机性，无法确定算法\ralgo 在新请求对到达时处于等待或空闲状态。尽管如此，在一个包含 $k$ 个请求对的单个独立片段 $f=(f_1, \cdots, f_k)$ 并且 $f_1\leq i\leq f_k$ 的情况下，将 \ralgo 在请求对 $p_i$ 到达时处于空闲状态的概率，定义为 $P_i$，以下引理证明该概率等于状态值 $s(t(p_i))$。
+
+\begin{lemma} \label{lem:probability}
+     对于任意独立片段$f=(f_1, \cdots, f_k)$且满足$f_1\leq i\leq f_k$中, 有$P_i=s(t(p_i))$.
+\end{lemma}
+
+\begin{proof}
+使用归纳法证明该引理。对第一请求对 $p_{f_1}$，$P_1=s(t(p_{f_1}))=1$。假设 $f_1<i\leq f_k$ 并且 $P_{i-1}=s(t(p_{f_{i-1}}))$。
+
+考虑两个连续的请求对 $p_{i-1}$ 和 $p_i$。当 $p_i$ 到达时，\ralgo 可能处于空闲状态的情况有两种可能，如下所示。
+\renewcommand{\labelenumi}{(\arabic{enumi})}
+\begin{enumerate}[align=left, labelsep=0.3em, itemindent=2.3em, 
+leftmargin=0em]
+    \item 当 $p_{i-1}$ 到达时，\ralgo 执行 $\Exter(p_{i-2}, p_{i-1})$ 并等待。这种情况发生的概率为 $1-P_{i-1}$。
+    \item 在时间间隔 $[t(p_{i-1}), t(p_i))$ 内，\ralgo 执行 $\Inter(p_{i-1})$，其中 $X_{i-1}$ 的样本小于 $l_{i-1}$。这种情况的概率为 $P_{i-1}\cdot \frac{l_{i-1}}{S_{i-1}} = l_{i-1}$。
+\end{enumerate}
+
+总之，当 $p_i$ 到达时，\ralgo 处于空闲状态的概率等于 $P_i = 1 - P_{i-1} + l_{i-1} =s(t(p_i))$。证毕。
+\end{proof}
+
+现在，证明随机在线算法\ralgo 在每个独立片段的解上竞争比都为$2$。
+\begin{theorem}
+    对于任意独立片段$f= (f_1, f_2, \cdots, f_k)$，算法\ralgo 在$f$上的竞争比为$2$。
+\end{theorem}
+
+\begin{proof}
+设$L_f$为某个独立片段$f$的长度，$t_u$为该独立片段的结束时间。令$rdsa(t)$表示\ralgo 在时间$t$之前所产生的总期望成本（包括空间和时间成本）。根据引理~\ref{lem:Phase_Length}，该独立片段上最优解的成本等于$L_f$。使用归纳法验证当$f_1 \leq i \leq f_k$时,有
+\begin{align}
+rdsa(t(p_i))=2(t(p_i)-t(p_{f_1}))+S_i\cdot (1-S_i) \label{eq:rdsa_pi} 
+\end{align}
+
+\textsl{基础情形：}当$i=1$时，$rdsa(t_{f_1})=0$且$S_1=1$，因此直接得到等式~\ref{eq:rdsa_pi}。
+
+\textsl{归纳假设：}当$f_1 \leq i < f_k$，假设等式~\ref{eq:rdsa_pi}对于任意$i$成立，现在证明其对于$i+1$也成立。
+
+\textsl{归纳证明：}考虑时间区间$(t(p_i),t(p_{i+1})]$。相较于$rdsa(t(p_i))$，如果\ralgo 在$p_i$到达时处于空闲状态，则$rdsa(t(p_{i+1}))$会包含一些额外的成本，这种情况的概率是$P_i$。
+
+现在讨论\ralgo 为$p_i$选择的延迟时间$X_i$。如果$X_i<l_i$，则\ralgo 会在时间$t(p_i)+X_i$执行$\Inter(p_i)$，额外成本为$2X_i+1$。否则，$X_i \geq l_i$，并且\ralgo 会执行$\Exter(p_i,p_{i+1})$，额外成本为$2l_i$。总之，时间区间$(t(p_i),t(p_{i+1})]$内产生的额外成本期望为
+$$
+    P_i \cdot \big( \int_{0}^{l_i} \frac{2X_i+1}{S_i}d(X_i) + \int_{l_i}^{S_i} \frac{2l_i}{S_i}d(X_i)\big) = l_i\cdot (1 + 2S_i - l_i)
+$$
+因此，
+\begin{align*}
+    rdsa(t(p_{i+1})) &= rdsa(t(p_{i})) + l_i\cdot (1 + 2S_i - l_i) \\
+    &= 2(t(p_i)-t(p_{f_1}))+S_i\cdot (1-S_i) + l_i\cdot (1 + 2S_i - l_i)\\
+    &=2(t(p_{i+1}) - t(p_{f_1})) + S_{i+1}\cdot (1-S_{i+1})
+\end{align*}
+
+由上可知，等式~\ref{eq:rdsa_pi}对于任何$f_1 \leq i \leq f_k$都成立。
+
+最后计算$(t(p_{f_k}), t_u]$的期间成本，其中只包含$t(p_{f_k})+X_{f_k}$时刻的$\Inter(p_{f_k})$的成本为$P_{f_k}\cdot (2\mathbf{E}[X_{f_k}]+1) = S_{f_k}\cdot (S_{f_k}+1)$。
+因此，$rdsa(t_u) = rdsa(t(p_{f_k})) + S_{f_k}\cdot (S_{f_k}+1) = 2L_f$。证毕。
+\end{proof}
+
+
+
+在定理~\ref{thm:algorithmPI}中证明了最优解的成本是所有独立片段成本之和，因此每个独立片段对于最优算法来说是独立的。同样地，在状态化随机延迟算法中，由于该算法是基于状态值$S_i$选择选项，每个独立片段都以初始状态值$1$开始。因此，上一个独立片段的解不会影响当前独立片段的解的选择。对于\ralgo 来说，所有独立片段也是独立的。
+
+综上所述，状态化随机延迟算法的竞争比为
+\begin{equation} \label{eq:cost_ratio}
+\frac{Cost_{RDSA}(R_p)}{Cost_{OPT}(R_p)} = \frac{\sum_{f}Cost_{RDSA}(f)}{\sum_{f}Cost_{OPT}(f)} =
+\frac{2\sum_{f}Cost_{OPT}(f)}{\sum_{f}Cost_{OPT}(f)} = 2    
+\end{equation}
+
+\begin{corollary}
+    \label{cor:2-competitive}
+    对任意请求对序列$R$，状态化随机延迟算法\ralgo 在$R$上的竞争比为$2$。
+\end{corollary}
+
+\subsection{广义版本的状态化随机延迟算法\ralgo}\label{subsec:generalization}
+本节介绍了\ralgo 的广义版本，适用于原始序列。假设给定请求序列$R$由$n$个请求组成，$r_1, \ldots, r_n$，其中 $t(r_1) \leq \ldots \leq t(r_n)$。对于任何有效算法$ALG$，每次最多有两个开放的请求。通过这种方式，可以根据开放的请求数量的奇偶性将时间轴分为“奇数区”和“偶数区”。更准确地说，对于$1\leq i \leq n$，当$i$为奇数时，区间$[t(r_i), t(r_{i+1}))$被称为奇数区；当$i$为偶数时，该区间被称为偶数区\footnote{此处定义$t(r_{n+1})=+\infty.$}。请注意，对于每个有效算法，包括最优算法，在每个奇数区间内都只有一个开放的请求，这导致不可避免的等待成本。在广义版本中仍然将某些请求成对考虑，并为每对请求定义到达时间。接下来按以下方式呈现\ralgo 的广义版本。
+
+开始时，没有请求，算法处于空闲状态。
+
+当算法处于空闲状态时，检查接下来到达的两个请求 $r_i$ 和 $r_{i+1}$（其中 $i$ 为奇数）。时间区间 $[t(r_i), t(r_{i+1}))$ 是奇数区间。在时间 $t(r_{i+1})$，如果 $x(r_i)=x(r_{i+1})$，则算法匹配这两个请求并保持空闲状态。否则，算法会将这两个请求视为到达时间为 $t(r_{i+1})$ 的一对请求，并进入等待状态。该对请求也被分配了一个类似于算法~\ref{alg:PhaseIdentification} 中的状态值 $S$。如果它是第一对，则其状态值为 $1$。否则，它的状态值等于 $\min\{1-S'+l,1\}$，其中 $S'$ 是前一对的状态值，$l$ 是从上一对到 $t(r_{i+1})$ 到达时间之间偶数区间的总长度。同样从 $\mathbf{U}(0,S)$ 中抽样一个延迟时间 $X$。
+
+当算法处于等待状态时，设 $R_1$ 和 $R_2$ 是具有状态值 $S$ 的一对开放请求，其中 $x(R_1)=a$，$x(R_2)=b$。类似地，检查接下来到达的两个请求 $r_i,r_{i+1}$，并且时间区间 $[t(r_i),t(r_{i+1}))$ 是奇数区间。不失一般性，假设 $x(r_i)=a$。在时间 $t_i$，算法匹配请求 $R_1$ 和 $r_i$。如果 $x(r_{i+1})=a$，则请求 $R_2$ 和 $r_{i+1}$ 被视为一对具有相同状态值和到达时间的请求。否则，当 $x(r_{i+1})=b$ 时，算法匹配 $R_2$ 和 $r_{i+1}$ 并变为空闲状态。同时，请求 $r_i$ 和 $r_{i+1}$ 被视为一对，其状态值为 $\min\{1-S'+l,1\}$，而到达时间为 $t(r_{i+1})$，这与之前类似。请注意，算法不会等待太久。更确切地说，一旦从时间 $\min\{t(R_1),t(R_2)\}$ 开始，偶数区间的总长度达到 $X$，则请求 $R_1$ 和 $R_2$ 立即匹配，并且算法变为空闲状态。
+
+以下定理显示 \ralgo 的广义版本也具有竞争比 $2$。
+
+\begin{theorem}
+算法 \ralgo 的广义版本对于在线 2-MPMD 问题是 $2$ 竞争比的。
+\end{theorem}
+
+\begin{proof}
+    考虑一个奇数区间$[t(p_i),t(p_{i+1}))$，其中$i$是奇数。设$\Delta t=t(p_{i+1})-t(p_i)$。对于任何有效算法，包括 \ralgo 的广义版本，在此时间间隔内恰好存在一个开放的请求。对于所有不早于$t(p_{i+1})$到达的请求，让它们提前$\Delta t$到达。这样，最优解的成本减少了$\Delta t$。与此同时，\ralgo 广义版本产生的解的成本也减少了$\Delta t$，即其竞争比不会增加。
+    
+    现在，任何奇数区间的长度都为零，即输入序列已被改变为成对序列。广义版的 \ralgo 与原始版本相同。根据推论\ref{cor:2-competitive}，该算法是$2$-竞争的。证毕。
+\end{proof}
+
+
+\section{随机近似下界的归纳证明} \label{sec:3-lowerbound}
+本节采用姚氏最小最大原则 (Yao's principle) \cite{yao1977probabilistic} 推导 2-MPMD 问题的随机近似下界，并表明状态化随机延迟算法是理论最优的。通过构建一种随机序列的分布，使得任何在线确定性算法的期望成本比至少为$2$。
+
+\subsection{随机序列构建}
+构造过程中使用状态函数$s(t)$来指示构造\footnote{这仍然是一个状态化过程，构造的当前步骤会基于上一个步骤的状态}，注意到状态函数$s(t)$可以由折线描述，其中每个转折点对应于序列中的一个请求对，如图~\ref{fig:statefunction}所示。随机匹配序列 $\tlr$ 构造过程如下：
+
+\renewcommand{\labelenumi}{(\arabic{enumi})}
+\begin{enumerate}[align=left, labelsep=-0.5em, itemindent=3.2em, leftmargin=0em]
+\item 将第一对放置在时间 $0$，并将其状态值设置为 $1$。
+\item 对于上一次放置的请求对，假设其拥有到达时间 $t$ 和状态值 $S=s(t)$，采样一个非负时间间隔$X\sim \mathrm{Exp}(1)$\footnote{回想一下 $\mathrm{Exp}(1)$ 是指数分布，其概率密度函数为 $f(x)=e^{-x}$，其中 $x \geq 0$。}。
+\item 如果 $X<S$，则在时间 $t+X$ 放置一请求对，并将其状态值设为 $1-S+X$；否则终止过程。
+\item 重复步骤2和3，直到过程结束。
+\end{enumerate}
+
+
+由此得到的序列实际上是一个独立片段。假设存在一个请求对到达时间为$t$、状态值为$S=s(t)$，令$P_t(x)$ 是在间隔 $(t,t+x)$ 内未进行任何放置的概率。因此，当 $x<s(t)$ 时，$P_t(x)=\int_{0}^{x}e^{-y}dy=e^{-x}$，与 $t$ 无关。为简单起见，在 $x\leq s(t)$ 时使用 $P(x)$ 代替记号 $P_t(x)$，且 $P(x)=e^{-x}$。
+
+\subsection{竞争比分析}
+
+
+
+
+现在能够计算$OPT$和任何在线确定性算法$ALG$产生的期望成本。需要注意的是，构造过程是状态化的，也就是对状态值为$S$的任意时间点后构造的序列的分布只与$S$有关。首先讨论$OPT$产生的期望成本，由引理~\ref{lem:Phase_Length}可知这等于相应独立片段长度的期望值。
+
+\begin{lemma}\label{lemma:optcost}
+    最优算法在$\tlr$的期望成本至多为$1$。
+\end{lemma}
+    
+\begin{proof}
+对于 $1\leq i$ 且 $0\leq s\leq 1$，假设第 $i$ 请求对在时间 $t$ 以状态值 $s$ 放置，则 $T(i,s)$ 表示第 $i$ 对之后的独立片段期望长度。注意到 $T(1,1)$ 刚好是所希望的。第$(i+1)$ 请求对有以下两种可能情况：
+\renewcommand{\labelenumi}{(\arabic{enumi})}
+\begin{enumerate}[align=left, labelsep=0.5em, itemindent=2.5em, leftmargin=0em]
+    \item 第$(i+1)$ 请求对不存在，即序列的结束时间为 $t+s$。该情况的概率为 $P(s)=e^{-s}$，额外成本为 $s$,如图~\ref{fig:opt_1}所示。
+    \item 第$(i+1)$ 请求对的到达时间为 $t+x$，其中 $0\leq x < s$，其概率密度为 $P(x)=e^{-x}$，额外成本为 $x+T(i+1,1-s+x)$，如图~\ref{fig:opt_2}所示。
+\end{enumerate}
+
+因此，对于$1\leq i$和$0\leq s \leq 1$，
+$$
+    T(i,s)=s\cdot e^{-s}+\int_{0}^{s}(x+T(i+1,1-s+x))\cdot e^{-x}dx
+$$
+假设$L>0$是足够大的常数，定义$T'(i,s)$为辅助函数，使得当$i\geq L$时，$T'(i,s)$满足与$T'(i,s)=-s^2+2s$相同的方程。那么，对于$i=L-1,\cdots,1$，使用归纳法如下：
+\begin{align*}
+    T'(i,s)&=s\cdot e^{-s}+\int_{0}^{s}(x+T'(i+1,1-s+x))\cdot e^{-x}dx \\
+    &=s\cdot e^{-s}+\int_{0}^{s}(x-(1-s+x)^2+(1-s+x))\cdot e^{-x}dx \ \ \text{(归纳假设)}\\
+    &=-s^2+2s
+\end{align*}
+因此，对于所有$i \geq 1$和$0 \leq s \leq 1$，有$T'(i,s)=-s^2+2s$。具体来说，$T'(1,1)=1$。现在考虑$T(1,1)$和$T'(1,1)$之间的差距。对于$\ell \geq L$，独立片段包含至少$\ell$对的概率最多为$(1-P(1))^{\ell}=(1-e^{-1})^{\ell}$。对于具有$\ell$对且第$L$对状态值为$s$的独立片段，在第$L$对之后实际发生的成本最多为$\ell-L+1$\footnote{简单地内部匹配所有对，这不会引起比最优算法更少的成本}，其中在$T'$中将其视为$-s^2+2s\geq 0$。因此，
+\begin{align*}
+    T(1,1)\leq T'(1,1)+\sum_{\ell=L}^{+\infty} (\ell-L+1)\cdot (1-e^{-1})^{\ell} = 1+e^2\cdot (1-e^{-1})^L.
+\end{align*}
+当$L$可以任意大时，$T(1,1)\leq 1$。证毕。 
+\end{proof}
+\begin{figure}
+  \centering
+  \input{figures/lowerbound_opt}
+  \caption{最优算法$OPT$在$\tlr$上的期望成本}
+\end{figure}
+
+现在讨论任何在线确定性算法产生的期望成本。
+
+\begin{lemma} \label{lemma:alg_cost}
+对于任何在线确定性算法 $ALG$，$ALG$ 所产生的期望成本至少为 $2$。    
+\end{lemma}
+\begin{proof}
+假设对于$1\leq i$和$0\leq s\leq 1$，第$i$对数$p_i$在时间$t$以状态值$s$放置。令$ALG(i,s,0)$和$ALG(i,s,1)$分别表示$ALG$在接收$p_i$后处于空闲或等待状态时产生的期望成本。目标是$ALG(1,1,1)\ge 2$。
+
+假设当接收到配对$p_i$时，$ALG$处于空闲状态。如果$p_i$是该独立片段的最后一对，则不会产生额外成本。否则，假设在$p_i$之后的第一对在时间$t+x$放置，其概率密度为$e^{-x}$。按照这种方式，$ALG$在时间$t+x$开始等待，这表明
+$$ALG(i,s,0)=\int_{0}^{s}ALG(i+1,1-s+x,1)\cdot e^{-x}dx$$ 该情况如图~\ref{fig:alg-4}所示。
+
+现在考虑当 $ALG$ 收到对 $(p_i)$ 时处于等待状态的情况。假设 $ALG$ 将对 $p_i$ 延迟 $m$ 秒，其中 $m\leq s$。有以下三种可能情况。
+
+\renewcommand{\labelenumi}{(\arabic{enumi})}
+\begin{enumerate}[align=left, labelsep=0.5em, itemindent=2.5em, leftmargin=0em]
+    \item 第 $(i+1)$ 对不存在，即序列的结束时间是 $t+s$。此情况的概率为 $P(s)=e^{-s}$，$ALG$ 在时间 $t+m$ 执行 $\Inter(p_i)$，额外成本为 $2m+1$，如图~\ref{fig:alg-1}所示。
+    \item 第 $(i+1)$ 对 $p_{i+1}$ 的到达时间为 $t+x$，其中 $x\leq m$，其概率密度为 $e^{-x}$。$ALG$ 在时间 $t+x$ 执行 $\Exter(p_i,p_{i+1})$ 并转为空闲状态，额外成本为 $2x+ALG(i+1,1-s+x,0)$如图~\ref{fig:alg-2}所示。
+    \item 第 $(i+1)$ 对 $p_{i+1}$ 的到达时间为 $t+x$，其中 $x>m$，其概率密度为 $e^{-x}$。$ALG$ 在时间 $t+m$ 执行 $\Inter(p_i)$ 并转为空闲状态。在时间 $t+x$，它再次转为等待状态。此情况下的额外成本为 $2m+1+ALG(i+1,1-s+x,1)$如图~\ref{fig:alg-3}所示。
+\end{enumerate}
+
+因此，对于$1\leq i$且$0\leq s\leq 1$，有：
+\begin{align*}
+ALG(i,s,1)=(2m+1)\cdot e^{-s} & +\int_{0}^{m}(2x+ALG(i+1,1-s+x,0))\cdot e^{-x}dx \\
+& + \int_{m}^{s}(2m+1+ALG(i+1,1-s+x,1))\cdot e^{-x}dx
+\end{align*}
+
+
+与引理~\ref{lemma:optcost}类似，令$L>0$为足够大的常数，并定义$ALG'(i,s,0)$和$ALG'(i,s,1)$作为两个辅助函数，使得相同的方程成立且在$i\geq L$和$j\in \{0,1\}$时，$ALG'(i,s,j)=j-s^2+2s$。然后，对于$i=L-1,\cdots,1$，使用归纳方法如下：
+\begin{align*}
+    ALG'(i,s,0)&=\int_{0}^{s}ALG'(i+1,1-s+x,1)\cdot e^{-x}dx \\
+    &=\int_{0}^{s}(1-(1-s+x)^2+2(1-s+x))\cdot e^{-x}dx \\
+    &=-s^2+2s \\
+    ALG'(i,s,1)&=(2m+1)\cdot e^{-s}+\int_{0}^{m}(2x+ALG'(i+1,1-s+x,0))\cdot e^{-x}dx \\
+    &+\int_{m}^{s}(2m+1+ALG'(i+1,1-s+x,1)\cdot e^{-x}dx \\
+    &=(2m+1)\cdot e^{-s}+\int_{0}^{m}(2x-(1-s+x)^2+2(1-s+x))\cdot e^{-x}dx \\
+    &+\int_{m}^{s}(2m+2-(1-s+x)^2+2(1-s+x))\cdot e^{-x}dx \\
+    &=1-s^2+2s
+\end{align*}
+
+与引理~\ref{lemma:optcost}类似，设$L>0$为一个足够大的常数，并定义$ALG'(i,s,0)$和$ALG'(i,s,1)$为两个辅助函数，使得相同的方程成立，当$i\ge L$且$j\in\{0,1\}$时，有$ALG'(i,s,j)=j-s^2+2s$。然后，对于$i=L-1,\cdots,1$，使用归纳法如下：
+\begin{align*}
+    ALG'(i,s,0)&=\int_{0}^{s}ALG'(i+1,1-s+x,1)\cdot e^{-x}dx \\
+    &=\int_{0}^{s}(1-(1-s+x)^2+2(1-s+x))\cdot e^{-x}dx \\
+    &=-s^2+2s \\
+    ALG'(i,s,1)&=(2m+1)\cdot e^{-s}+\int_{0}^{m}(2x+ALG'(i+1,1-s+x,0))\cdot e^{-x}dx \\
+    &+\int_{m}^{s}(2m+1+ALG'(i+1,1-s+x,1)\cdot e^{-x}dx \\
+    &=(2m+1)\cdot e^{-s}+\int_{0}^{m}(2x-(1-s+x)^2+2(1-s+x))\cdot e^{-x}dx \\
+    &+\int_{m}^{s}(2m+2-(1-s+x)^2+2(1-s+x))\cdot e^{-x}dx \\
+    &=1-s^2+2s
+\end{align*}
+
+
+
+因此，当$i \geq L$且$j \in \{0,1\}$时，$ALG'(i,s,j)=j-s^2+2s$。特别地，$ALG'(1,1,1)=2$。现在，让考虑$ALG(1,1,1)$和$ALG'(1,1,1)$之间的差距。对于$\ell \geq L$，独立片段包含至少$\ell$对的概率最多为$(1-P(1))^{\ell}=(1-e^{-1})^{\ell}$。对于一个具有$\ell$个请求对，并且第$L$对具有状态值$s$的独立片段，在第$L$对之后实际产生的成本不小于$0$，其中在$T'$中被认为是至多$1-s^2+2s\geq 2$。因此，
+\begin{align*}
+    ALG(1,1,1)\geq ALG'(1,1,1)-\sum_{\ell=L}^{+\infty}2(1-e^{-1})^{\ell}=2-2e(1-e^{-1})^L
+\end{align*}
+由于$L$可以任意大，$ALG(1,1,1)\geq 2$。证毕。
+\end{proof}
+
+\begin{figure}[htp]
+  \centering
+  \input{figures/lowerbound_alg}
+  \caption{确定性算法$ALG$在$\tlr$上的期望成本}
+\end{figure}
+
+\begin{theorem}
+    任何随机化在线算法在2-MPMD上的竞争比至少为 $2$。
+\end{theorem}
+
+\begin{proof}
+    依据引理~\ref{lemma:optcost}和引理~\ref{lemma:alg_cost}，$ALG(1,1,1)\geq2$且$T(1,1)\leq 1$，即对于 $\tlr$，任何在线确定性算法的期望成本比率至少为 $2$。基于姚氏最小最大原则\cite{yao1977probabilistic}，任何随机化在线算法的竞争比至少为 $2$。证毕。
+\end{proof}
+
+\section{随机近似下界的演绎推导} \label{sec:3-formalization}
+本节将介绍解决随机理论下界中使用到的技术。
+
+通过直觉可知需要构造具有某种分布的独立片段，并且这个过程是一个状态化的过程。但是这个分布是未知的。由第~\ref{sec:3-optimal}节可知，最优解的产生完全基于状态值，因此可根据生成片段时当前的状态值来决定之后的片段如何生成。即在某一个时刻，假设该时刻的状态值为$s$，令其之后$\Delta t$时间内生成一个请求对的概率应该为$f(s)\Delta t$，也就是构造序列的生成概率密度为$f(s)$。
+
+接下来计算一个重要的条件概率$g_s(y)$，该条件概率指示在一个状态值为$s$的时间点之后，一直持续到状态值为$y$之间都没有新的请求对生成的概率。
+\begin{align*}
+& & g_s(y-\varepsilon) = g_s(y)(1-f(y)\varepsilon) \text{且} g_s(s) = 1\\
+& \Rightarrow & g_s'(y) = \frac{g_s(y) - g_s(y-\varepsilon)}{\varepsilon} = g_s(y) * f(y)\\
+& \Rightarrow & g_s'(y) = g_s(y)f(y) \Rightarrow g_s(y) = e^{F(y)-F(s)}
+\end{align*}
+
+现在需要计算 $OPT$ 和任何在线确定性算法 $ALG$ 产生的期望成本。需要注意的是，构造过程是状态化的，也就是说，对于状态值为 $s$ 的任意时间点后构造的序列的分布，只与 $s$ 有关。因此，假设某一时间点其状态值为 $s$，计算算法在这一点之后构造序列的期望成本，该值仅与状态值 $s$ 有关。首先讨论$OPT$产生的期望成本，这等于相应独立片段长度的期望值。
+$T(s)$考虑两种情况:
+ \renewcommand{\labelenumi}{(\arabic{enumi})}
+\begin{enumerate}[align=left, labelsep=-0.5em, itemindent=3.6em, leftmargin=0em]
+    \item 构造过程在之后没有生成请求对，独立片段增加长度$s$。这种情况的概率为$g_s(0)=e^{F(0)-F(s)}$。
+    \item 构造过程在之后状态$y$生成请求对，独立片段增加长度$(s-y) +T(1-y)$。这种情况的概率密度为$g_s(y)=e^{F(y)-F(s)}$。
+\end{enumerate}
+因此可得递推式：
+\begin{equation}
+    T(s)=s e^{F(0)-F(s)}+\int_0^s[(s-y)+T(1-y)] e^{F(y)-F(s)} f(y)dy
+\end{equation}
+    
+接下来计算$ALG$的期望成本，对任意 $ALG$ 参数化。由于$ALG$ 在任一时间点要么等待，要么空闲，并且在这一时间点后可以延迟等待，将延迟等待的时间参数化为 $m$\footnote{注意到 $m>s$ 的算法可以等价转化为 $m=s$ 的算法}。可获得 $ALG$ 对构造序列的成本计算\footnote{注意在$A(0,s)$中的$m^*$的值并不能确定}，类似\ref{sec:3-lowerbound}节中的定义，将$ALG$等待状态的版本定义为$A(1,s,m)$，空闲状态的版本定义为$A(0,s)$，两者均可展开为积分递推式，$A(1,s,m)$考虑两种情况:
+ \renewcommand{\labelenumi}{(\arabic{enumi})}
+\begin{enumerate}[align=left, labelsep=-0.5em, itemindent=3.6em, leftmargin=0em]
+    \item 构造过程在$m$时间内没有生成请求对，$ALG$会在$m$时间内部匹配，其成本为$1+2m$。此后$ALG$转换为空闲状态。这种情况的概率为$g_s(s-m)=e^{-m}$。
+    \item 构造过程在$(0, m)$时间内生成请求对，其$ALG$外部匹配成本为$2(s-y)$，此后$ALG$转换为空闲状态。这种情况的概率密度为$f(y)e^{y-s}$。
+\end{enumerate}
+$A(0, s)$只会考虑构造算法生成某对请求点之后，算法便转换为等待状态，其概率密度为$e^{F(y)-F(x)}$，因此可得递推式：
+\begin{align}
+    \nonumber & A(1, s, m)=[(1+2m)+A(0, s-m)]e^{-m}+\int_{s-m}^s[2(s-y)+A(0, 1-y)]f(y)e^{y-s}dy \\
+    &A(0, s)=\int_0^s A(1, 1-y, m^*) e^{F(y)-F(s)}f(y)dy 
+\end{align}
+
+此时目标是 $\max_{f(x)}\min_{m}{A(1, 1, m)/T(1)}$，即找到一种分布，能够攻击所有确定性算法，并找到其中成本比最大的一种分布。这类似于博弈论中扮演敌手，设计一个分布去攻击所有的确定性策略。因此可假设最优分布满足\emph{混合策略纳什均衡}，即所有确定性算法都具有相同的成本。
+
+假设$ALG$延迟等待任意值在$\tlr$上的期望成本都相同，则假设以下等式成立：
+\begin{align}
+     \label{eq:assumption}\forall m, ~~~~  A(1, s, m) & = a(s) \Rightarrow \frac{d}{dm}a(s) = 0\\ 
+    A(0, s) & = b(s) 
+\end{align}
+让$A(1, s, m)$对$m$求导可得：
+\begin{align}
+   \nonumber \frac{d}{dm}A(1,s,m) = & 2 m e^{- m} f(s-m) - 2 m e^{- m} - b{\left(- m + s \right)} e^{- m} \\
+   & + b{\left(m - s + 1 \right)} e^{- m} f(s-m) - e^{- m} b'(s-m) + e^{- m}
+\end{align}
+
+重整化，令$s-m = t$, 联立$a'(s)=0$的假设可得方程：
+\begin{equation} \label{eq:lowerbound_1}
+    2mf(t) - 2m - b(t) + b(1-t)f(t) - b'(t) + 1 = 0 
+\end{equation}
+
+同时，让$A(0, s)$对$s$求导可得：
+\begin{align}
+    \nonumber \frac{d}{dm}A(0,s) & = \\ 
+    \nonumber  b'(s) & = a(1-s)f(s) - f(s)\int\limits_{0}^{s} a{\left(1 - y \right)} e^{- F{\left(s \right)} + F{\left(y \right)}} f(y)\, dy\\
+    b'(s) & = a(1-s)f(s) - f(s)b(s) \label{eq:lowerbound_2}
+\end{align}
+同时，可得：
+\begin{equation} \label{eq:lowerbound_3}
+    A(1,s,0) = a(s) = 1 + b(s)     
+\end{equation}
+
+联立方程~\ref{eq:lowerbound_1}、~\ref{eq:lowerbound_2}和\ref{eq:lowerbound_3}可得：
+\begin{align*}
+     & & b'(t) & = 2mf(t)-2m-b(t)+b(1-t)f(t) + 1 \\
+     & &  & = 1+b(1-t)f(t) - b(t)f(t) \\
+    & \Rightarrow & f(t)(2m+b(t)) & = 2m+b(t) \\
+    & \Rightarrow & f(t) & = 1
+\end{align*}
+
+因此可得$f(s)=1$。
+将其代入$T(s), A(1,s,m)$可推出：
+\begin{align}
+    T(s) & = -s^2 + 2s \\
+    A(1, s, m) & = -s^2 + 2s + 1
+\end{align}
+
+取$s=1$，可以得到目标值$T(1)=1,A(1,1,m)=2$，与上一节归纳证明的结果一致，并且发现算法$A(1, 1, m)$的值与$m$无关，满足假设的等式\ref{eq:assumption}。
+\section{本章小结}

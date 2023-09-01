@@ -1,0 +1,59 @@
+\usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{decorations.pathreplacing}
+
+\tikzset{snake it/.style={decorate, decoration=snake}}
+
+
+\begin{tikzpicture}[x=3pt,y=3pt,yscale=4,xscale=4]
+    \def\pairs{{a,b,c,d}}
+    \coordinate (t) at (2,0);
+    \coordinate (tst) at (7,0);
+    
+    \draw[->] (0,0)--(25,0) node[right]{时间};
+    \draw[->] (0,0) node [anchor=north east] {$0$} --(0,7) node[left] {状态值}; 
+    \draw [dash pattern=on 3pt off 3pt on 1pt off 3pt] (0,8) -- (25, 8) node [right] {$b$} (0,9) -- (25, 9) node [right] {$a$}; 
+    \draw [loosely dashed] (0, 6) node [left]{$1$} -- (25, 6); 
+
+    \draw (0, 6) coordinate (a) 
+                 -- ([turn]-135:6) coordinate (b) 
+                 -- ([turn]90:3) coordinate (c) 
+                 -- ([turn]-90:2) coordinate (d)
+                 -- ([turn]90:5) coordinate (f1);
+    \draw  (13, 6) coordinate (e) -- (13, 5.9999) 
+                 -- ([turn] 45:2) coordinate (f) 
+                 -- ([turn] 90:2) coordinate (f2);  
+
+    \draw  (17, 6) coordinate (g) -- (17, 5.999) 
+    -- ([turn] 45:8.4852) coordinate (f3);  
+
+    \foreach \i\p in {1/a,2/b,3/c,4/d,5/e,6/f,7/g}
+    {
+    \fill (\p |- 0, 8) circle (0.5pt) node [below left] {}
+        (\p |- 0, 9) circle (0.5pt) node [below left] {}; 
+    \draw (\p |- 0, 9.2) node [anchor=north east, xshift=0.2] {$p_{\i}$};
+    }
+    \draw ({$(a)!0.5!(b)$} |- 0, 8 ) node [anchor=north] [font=\small] {$l_1$}; 
+    \draw ({$(b)!0.5!(c)$} |- 0, 8 ) node [anchor=north] [font=\small] {$l_2$}; 
+    \draw ({$(c)!0.5!(d)$} |- 0, 8 ) node [anchor=north] [font=\small] {$l_3$}; 
+    \draw ({$(d)!0.5!(e)$} |- 0, 8 ) node [anchor=north] [font=\small] {$l_4$}; 
+    \draw ({$(e)!0.5!(f)$} |- 0, 8 ) node [anchor=north] [font=\small] {$l_5$}; 
+    \draw ({$(f)!0.5!(g)$} |- 0, 8 ) node [anchor=north] [font=\small] {$l_6$}; 
+
+    \foreach \p in {a,c,e,g}{
+        \draw [color=red, line width=2.25] (\p) -- (\p|-0,0); 
+
+    }
+    \foreach \p in {b,d,f}{
+        \draw [color=red, line width=2.25] (\p) -- (\p|-0,6); 
+    }
+
+    \draw ($(a)!0.5!(a|-0,0)$) node [anchor=west]  {$S_1$}; 
+    \draw ($(b)!0.5!(b|-0,6)$) node [anchor=west]  {$S_2$}; 
+    \draw ($(c)!0.5!(c|-0,0)$) node [anchor=west]  {$S_3$}; 
+    \draw ($(d)!0.5!(d|-0,6)$) node [anchor=west]  {$S_4$}; 
+    
+    \draw [decorate, decoration = {brace}] (a|-0,10) --  (f1|-0,10) node [midway, below][yshift=24pt][font=\large] {$f_1$};
+    \draw [decorate, decoration = {brace}] (e|-0,10) --  (f2|-0,10) node [midway, below][yshift=24pt][font=\large] {$f_2$};
+    \draw [decorate, decoration = {brace}] (g|-0,10) --  (f3|-0,10) node [midway, below][yshift=24pt][font=\large] {$f_3$};;
+
+\end{tikzpicture}

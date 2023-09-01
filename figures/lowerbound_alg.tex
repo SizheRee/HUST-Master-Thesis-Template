@@ -1,0 +1,117 @@
+\begin{tabular}{cc}
+% 第一行
+
+\begin{minipage}[b]{0.5\textwidth} \subfloat[$ALG$在$t$处于等待时情况1]{
+\label{fig:alg-1}
+\centering
+\begin{tikzpicture}[scale=0.5]
+
+\input{figures/lowerbound_common}
+\coordinate (p) at (5,3);
+\coordinate (i) at (2,6);
+
+\draw (i) -- (8,0);
+% \draw[red, line width=2pt] (p) -- (p|-0,8) node[black, right] {};
+
+
+\draw (i|- 0,12) coordinate (i1) node[circle, fill, inner sep=1.5pt]{};
+\draw (i|- 0,11) node {\large$p_i$};
+\draw (i|- 0,10) coordinate (i2)  node[circle, fill, inner sep=1.5pt]{};
+
+\draw[green, line width=1pt] (i1) -- (i1-|p) coordinate(p1) -- (p|-0,10) coordinate(p2) -- (i2);
+\draw (p1)  node [above] {$\texttt{Internal}(p_i)$};
+\draw[dashed] (p2) -- (p2|-0,0) node [below] {$t+m$};
+
+\end{tikzpicture}}
+\end{minipage}\hfil &
+
+\begin{minipage}[b]{0.5\textwidth} \subfloat[$ALG$在$t$处于等待时情况2]{
+\label{fig:alg-2}
+\centering
+\begin{tikzpicture}[scale=0.5]
+
+\input{figures/lowerbound_common}
+\coordinate (p) at (4,4);
+\coordinate (m) at (5,0);
+\coordinate (i) at (2,6);
+
+\draw (i) -- (p);
+\draw[red, line width=2pt] (p) -- (p|-0,8) node[black, right] {};
+
+\draw (i|- 0,12) coordinate (i1) node[circle, fill, inner sep=1.5pt]{};
+\draw (i|- 0,10) coordinate (i2)  node[circle, fill, inner sep=1.5pt]{};
+\draw (i|- 0,11) node {\large$p_i$};
+
+\draw[green, line width=1pt] (i1) -- (i1-|p) coordinate(p1);
+\draw[green, line width=1pt] (p|-0,10) coordinate(p2) -- (i2);
+
+\draw (p1)  node [above] {$\texttt{External}(p_i,p_{i+1})$};
+\draw[dashed] (p2) -- (p2|-0,0) -- ++(-0.5,0) node [below] {\small$t+x$};
+
+\draw (p1) node[circle, fill, inner sep=1.5pt]{};
+\draw (p2) node[circle, fill, inner sep=1.5pt]{};
+\draw (p|- 0,11) node {\large$p_{i+1}$};
+
+\draw (p) -- ++(45:0.3cm) sin ++(45:0.3cm) cos ++(45:0.3cm) sin ++(45:0.3cm) cos ++(45:0.3cm) sin ++(45:0.3cm) cos ++(45:0.3cm) sin ++(45:0.3cm) cos ++(45:0.3cm);
+
+\draw[dashed] (m) -- (m|-0,10);
+\draw (5.5,0) node [below] {\small$t+m$};
+
+\end{tikzpicture}}
+\end{minipage}\\
+
+
+% 第二行
+\begin{minipage}[b]{0.5\textwidth} \subfloat[$ALG$在$t$处于等待时情况3]{
+\label{fig:alg-3}
+\centering
+\begin{tikzpicture}[scale=0.5]
+
+\input{figures/lowerbound_common}
+\coordinate (p) at (6,2);
+\coordinate (m) at (5,0);
+\coordinate (i) at (2,6);
+
+\draw (i) -- (p);
+\draw[red, line width=2pt] (p) -- (p|-0,8) node[black, right] {};
+
+\draw (i|- 0,12) coordinate (i1) node[circle, fill, inner sep=1.5pt]{};
+\draw (i|- 0,10) coordinate (i2)  node[circle, fill, inner sep=1.5pt]{};
+\draw (i|- 0,11) node {\large$p_i$};
+
+\draw[green, line width=1pt] (i1) -- (i1-|m) -- (m|-0,10) -- (i2);
+\draw (m|-0,12)  node [above] {$\texttt{Internal}(p_i)$};
+
+
+\draw (p|-0,10) node[circle, fill, inner sep=1.5pt]{};
+\draw (p|-0,12) node[circle, fill, inner sep=1.5pt]{};
+\draw (p|- 0,11) node {\large$p_{i+1}$};
+\draw[dashed] (p|-0,10) -- (p|-0,0) -- ++(0.5,0) node [below] {\small$t+x$};
+
+\draw (p) -- ++(45:0.3cm) sin ++(45:0.3cm) cos ++(45:0.3cm) sin ++(45:0.3cm) cos ++(45:0.3cm) sin ++(45:0.3cm) cos ++(45:0.3cm) sin ++(45:0.3cm) cos ++(45:0.3cm);
+
+\draw[dashed] (m) -- (m|-0,10);
+\draw (4.5,0) node [below] {\small$t+m$};
+\end{tikzpicture}}
+\end{minipage}\hfil &
+
+
+\begin{minipage}[b]{0.5\textwidth} \subfloat[$ALG$在$t$处于空闲状态]{
+\label{fig:alg-4}
+\centering
+\begin{tikzpicture}[scale=0.5]
+\input{figures/lowerbound_common}
+
+\coordinate (p) at (6,2);
+\draw (2,6) -- (p);
+\draw[dashed] (p) -- (6,0) node[below] {$t+x$};
+
+\draw[red,line width=2pt] (p) -- (p|-0,8) node[black, right] {};
+\draw (p) -- ++(45:0.3cm) sin ++(45:0.3cm) cos ++(45:0.3cm) sin ++(45:0.3cm) cos ++(45:0.3cm) sin ++(45:0.3cm) cos ++(45:0.3cm) sin ++(45:0.3cm) cos ++(45:0.3cm);
+
+\draw (p |- 0,12)  node[circle, fill, inner sep=1.5pt] {};
+\draw (p |- 0,10) node[circle, fill, inner sep=1.5pt] {};
+
+\end{tikzpicture}}
+\end{minipage}\\
+\end{tabular}
