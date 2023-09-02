@@ -194,7 +194,6 @@
 % \setCJKfamilyfont{kai}{KaiTi}
 % \setCJKfamilyfont{fs}{FangSong}
 
-%改动1
 \setCJKmainfont[Path=font/,AutoFakeBold = {2.25},ItalicFont={simkai.ttf}]{SimSun.ttf}
 \setCJKsansfont[Path=font/,AutoFakeBold = {2.25},ItalicFont={simkai.ttf}]{SimHei.ttf}
 \setCJKmonofont[Path=font/,AutoFakeBold = {2.25},ItalicFont={simkai.ttf}]{simfang.ttf}
@@ -267,11 +266,9 @@
 \setlength{\headheight}{0.9cm}
 \setlength{\topskip}{0pt}
 \setlength{\skip\footins}{15pt}
-% \setlength{\footskip}{1.3cm}
 \setlength{\footskip}{1.8cm}
 \setlength{\topmargin}{3.0cm-1in}
 \setlength{\headsep}{0.5cm}
-% \addtolength{\textheight}{-7.0cm}
 \addtolength{\textheight}{-7.8cm}
 
 
@@ -606,7 +603,6 @@
 %% 正文小四号（12pt）字，行距为固定值18 pt，18/12=1.5倍行距
 %\renewcommand\normalsize{\fontsize{12pt}{18pt}\selectfont}
 \renewcommand\normalsize{\fontsize{12pt}{23.5pt}\selectfont}
-%改动2
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 用于中文段落缩进和正文版式
@@ -715,7 +711,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 应用 titletoc 宏包定义标题的目录项格式
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%改动3
 % 目录涉及 2 层，即: x.x
 % chapter(0), section(1), subsection(2), subsubsection(3)
 \setcounter{tocdepth}{1}
@@ -767,7 +762,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 定义页眉页脚，参考 fancyhdr 宏包的代码
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%改动4 页眉页脚 加红
 \ifHUST@redheader
 \RequirePackage{xcolor}
 \fi
@@ -789,7 +783,7 @@
     \def\@oddhead{%
       \HUST@redtext{\vbox{%
         \parbox[b]{\textwidth}{\centering\sihao%
-          \ziju{0.8em} \kai\bfseries \dasan[1] \HUST@schoolename\HUST@apply} %改动使用16.5pt字体 加粗
+          \ziju{0.8em} \kai\bfseries \dasan[1] \HUST@schoolename\HUST@apply}
         \vskip8pt
         \hspace{-4mm} \vbox{\hspace{-3mm} \hrule width 1.04\textwidth height\headrulewidth depth0pt\vskip1.0pt\hrule width 1.04\textwidth}}}}\fi%
     \let\@evenhead=\@oddhead
@@ -1069,7 +1063,6 @@
 
 % 定义中英文摘要
 \newcommand{\HUST@makeabstract}{%
-%改动5
     % 定义中文摘要
     \clearpage
     \setcounter{page}{1}
@@ -1106,7 +1099,6 @@
     }
 
 % 定义“符号对照表”环境，可选
-%改动6
 \newenvironment{denotation}{
     %\cleardoublepage
     %\phantomsection
@@ -1137,7 +1129,6 @@
 
 
 % 定义封底的“致谢”
-%改动7
 \newenvironment{ack}{
     \clearpage
     \phantomsection
@@ -1148,11 +1139,9 @@
    {}
 
 % 定义附录及其目录项格式
-%改动8
 \let\HUST@appendix\appendix
 \renewenvironment{appendix}{%
   \HUST@appendix
-  %\gdef\@chapapp{\appendixname}~\thechapter
   \def\@makechapterhead##1{%重定义附录章节标题格式
   \vspace*{24bp}%
   \begingroup

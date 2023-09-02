@@ -1,12 +1,13 @@
 # HUST-PhD-Thesis-Latex
 
 
-HUSTThesis.cls 2021/09/16 version V3.1
+HUSTThesis.cls 2023/08/31 version V4.0
 
 This is the unofficial LaTeX class for Master/Ph.D. Thesis Template of Huazhong University of Science and Technology
 
+Contributors: Sizhe Li(2023 V4.0) Lianghao Li, Jianqing Lin (2021 V3.1), Xinze Zhang (2020 V3.0), Huikan Liu (2006 V2.0), and Feng Jiang (2005 V1.0). 
 
-Contributors: Lianghao Li, Jianqing Lin (2021 V3.1), Xinze Zhang (2020 V3.0), Huikan Liu (2006 V2.0), and Feng Jiang (2005 V1.0). 
+Copyright (C) 2023-2024 by Sizhe Li <sizheree@hust.edu.cn>
 
 Copyright (C) 2020-2021 by Xinze Zhang <xinze@hust.edu.cn>
 
@@ -17,7 +18,7 @@ This code is distributed under the Perl Artistic License
 and may be freely used, distributed and modified.
 Retain the contribution notices and credits.
 
-Current maintainer: 
+Current maintainer:
 lianghao1993@hust.edu.cn
 linjqcn@gmail.com
 
@@ -41,6 +42,25 @@ mathtimes, mathCMR
     目前学校尚未规定公式选用什么字体，推荐使用 CM Roman 字体，
     因为 Times Roman 数学字体不支持黑体。
     如果使用 Times Roman 字体，需加载 bm 宏包用于支持黑体（不推荐）。
+
+redheader 
+    将页眉页脚设置为红色。
+
+
+*******
+09/2023 V4.0 changes:
+
+modify class file (HUSTthesis.cls):
+
+    1. update textheight and footskip to meet HUST 2023 thesis standards.
+
+    2. update the indentation and spacing of the itemize, enumerate. 
+
+    3. add documentclass parameter redheader. 
+
+    4. add \declarepage.
+
+ by Sizhe Li (sizheree@hust.edu.cn)
 
 *******
 09/2021 V3.1 changes:
