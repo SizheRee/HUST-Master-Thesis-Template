@@ -44,7 +44,7 @@ mathtimes, mathCMR
     如果使用 Times Roman 字体，需加载 bm 宏包用于支持黑体（不推荐）。
 
 redheader 
-    将页眉页脚设置为红色。
+    将页眉页脚设置为红色，没有该参数则为黑色。
 
 
 *******
@@ -59,6 +59,8 @@ modify class file (HUSTthesis.cls):
     3. add documentclass parameter redheader. 
 
     4. add \declarepage.
+
+    5. update HUSTThesis.bst with full name format.
 
  by Sizhe Li (sizheree@hust.edu.cn)
 

@@ -287,7 +287,9 @@ FUNCTION {format.names}
   numnames 'namesleft :=
     { namesleft #0 > }
     { s nameptr
-      "{f.~}{ll}"
+      % "{f.~}{ll}"
+      % 改动，华中科技大学2023年要求修改为全名格式
+      "{ff~}{ll}" 
       format.name$
       %bibinfo bibinfo.check
       't :=
