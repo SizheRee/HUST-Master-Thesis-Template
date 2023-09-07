@@ -1,4 +1,4 @@
-# HUST-PhD-Thesis-Latex
+# HUST-PhD/Master-Thesis-Latex
 
 
 HUSTThesis.cls 2023/08/31 version V4.0
