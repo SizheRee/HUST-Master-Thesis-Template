@@ -1,7 +1,7 @@
 # HUST-PhD/Master-Thesis-Latex
 
 
-HUSTThesis.cls 2023/08/31 version V4.0
+HUSTThesis.cls 2023/08/31 version V3.2
 
 This is the unofficial LaTeX class for Master/Ph.D. Thesis Template of Huazhong University of Science and Technology
 
