@@ -5,7 +5,7 @@ HUSTThesis.cls 2023/08/31 version V4.0
 
 This is the unofficial LaTeX class for Master/Ph.D. Thesis Template of Huazhong University of Science and Technology
 
-Contributors: Sizhe Li(2023 V4.0) Lianghao Li, Jianqing Lin (2021 V3.1), Xinze Zhang (2020 V3.0), Huikan Liu (2006 V2.0), and Feng Jiang (2005 V1.0). 
+Contributors: Sizhe Li(2023 V3.2), Lianghao Li, Jianqing Lin (2021 V3.1), Xinze Zhang (2020 V3.0), Huikan Liu (2006 V2.0), and Feng Jiang (2005 V1.0). 
 
 Copyright (C) 2023-2024 by Sizhe Li <sizheree@hust.edu.cn>
 
@@ -48,7 +48,7 @@ redheader
 
 
 *******
-09/2023 V4.0 changes:
+09/2023 V3.2 changes:
 
 modify class file (HUSTthesis.cls):
 
