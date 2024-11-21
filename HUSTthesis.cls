@@ -184,26 +184,22 @@
 % 中文标点符号支持
 %\RequirePackage{CJKpunct}
 % 让导言区支持中文
-%\begin{CJK*}{GBK}{song}\end{CJK*}
-% \setCJKmainfont[AutoFakeBold = {2.25},ItalicFont={KaiTi}]{SimSun}
-% \setCJKsansfont{SimHei}
-% \setCJKmonofont{FangSong}
 
-% \setCJKfamilyfont{song}[AutoFakeBold = {2.25}]{SimSun}
-% \setCJKfamilyfont{hei}{SimHei}
-% \setCJKfamilyfont{kai}{KaiTi}
-% \setCJKfamilyfont{fs}{FangSong}
+% 定义字体路径和通用选项
+\newcommand{\CJKfontoptions}{Path=font/,AutoFakeBold=2.25,ItalicFont=simkai.ttf}
 
-\setCJKmainfont[Path=font/,AutoFakeBold = {2.25},ItalicFont={simkai.ttf}]{SimSun.ttf}
-\setCJKsansfont[Path=font/,AutoFakeBold = {2.25},ItalicFont={simkai.ttf}]{SimHei.ttf}
-\setCJKmonofont[Path=font/,AutoFakeBold = {2.25},ItalicFont={simkai.ttf}]{simfang.ttf}
-\setCJKmonofont[Path=font/,AutoFakeBold = {2.25},ItalicFont={simkai.ttf}]{STZhongsong.ttf}
+% 设置主要字体
+\setCJKmainfont[\CJKfontoptions]{SimSun.ttf}
+\setCJKsansfont[\CJKfontoptions]{SimHei.ttf}
+\setCJKmonofont[\CJKfontoptions]{STZhongsong.ttf}
 
-\setCJKfamilyfont{zhongsong}[Path=font/,AutoFakeBold = {2.25}]{STZhongsong.ttf}
-\setCJKfamilyfont{song}[Path=font/,AutoFakeBold = {2.25}]{SimSun.ttf}
-\setCJKfamilyfont{hei}[Path=font/,AutoFakeBold = {2.25}]{SimHei.ttf}
-\setCJKfamilyfont{kai}[Path=font/,AutoFakeBold = {2.25}]{simkai.ttf}
-\setCJKfamilyfont{fs}[Path=font/,AutoFakeBold = {2.25}]{simfang.ttf}
+% 设置字体家族
+\setCJKfamilyfont{zhongsong}[\CJKfontoptions]{STZhongsong.ttf}
+\setCJKfamilyfont{song}[\CJKfontoptions]{SimSun.ttf}
+\setCJKfamilyfont{hei}[\CJKfontoptions]{SimHei.ttf}
+\setCJKfamilyfont{kai}[\CJKfontoptions]{simkai.ttf}
+\setCJKfamilyfont{fs}[\CJKfontoptions]{simfang.ttf}
+
 
 % 加强定理环境的宏包
 \RequirePackage[amsmath,thmmarks,hyperref]{ntheorem}
@@ -266,9 +262,11 @@
 \setlength{\headheight}{0.9cm}
 \setlength{\topskip}{0pt}
 \setlength{\skip\footins}{15pt}
+% \setlength{\footskip}{1.3cm}
 \setlength{\footskip}{1.8cm}
 \setlength{\topmargin}{3.0cm-1in}
 \setlength{\headsep}{0.5cm}
+% \addtolength{\textheight}{-7.0cm}
 \addtolength{\textheight}{-7.8cm}
 
 
@@ -603,6 +601,7 @@
 %% 正文小四号（12pt）字，行距为固定值18 pt，18/12=1.5倍行距
 %\renewcommand\normalsize{\fontsize{12pt}{18pt}\selectfont}
 \renewcommand\normalsize{\fontsize{12pt}{23.5pt}\selectfont}
+%改动2
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 用于中文段落缩进和正文版式
@@ -711,6 +710,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 应用 titletoc 宏包定义标题的目录项格式
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%改动3
 % 目录涉及 2 层，即: x.x
 % chapter(0), section(1), subsection(2), subsubsection(3)
 \setcounter{tocdepth}{1}
@@ -762,6 +762,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 定义页眉页脚，参考 fancyhdr 宏包的代码
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%改动4 页眉页脚 加红
 \ifHUST@redheader
 \RequirePackage{xcolor}
 \fi
@@ -783,7 +784,7 @@
     \def\@oddhead{%
       \HUST@redtext{\vbox{%
         \parbox[b]{\textwidth}{\centering\sihao%
-          \ziju{0.8em} \kai\bfseries \dasan[1] \HUST@schoolename\HUST@apply}
+          \ziju{0.8em} \kai\bfseries \dasan[1] \HUST@schoolename\HUST@apply} %改动使用16.5pt字体 加粗
         \vskip8pt
         \hspace{-4mm} \vbox{\hspace{-3mm} \hrule width 1.04\textwidth height\headrulewidth depth0pt\vskip1.0pt\hrule width 1.04\textwidth}}}}\fi%
     \let\@evenhead=\@oddhead
@@ -1000,60 +1001,67 @@
 
 % 版权页
 \newcommand{\HUST@authorization@mk}{%
-    %\vspace*{1cm}
-
     \begin{center}
-    \parbox[t]{\textwidth}{\sanhao \hei \bfseries \centerline{\HUST@declare}}
+        \parbox[t]{\textwidth}{\sanhao \hei \bfseries \centerline{\HUST@declare}}
 
-    \vspace{1cm}
-    \parbox[t]{\textwidth}{\xiaosi[2]\HUST@declaretext}
+        \vspace{1cm}
+        \parbox[t]{\textwidth}{\xiaosi[2]\HUST@declaretext}
 
-    \vspace{1.5cm}
-    \parbox[t]{\textwidth}{\xiaosi[1.5]
-    \hfill \begin{HUST@tabular}{ll}
-        \HUST@authorsig & \hspace{-2em} \vspace{0.5cm}\\
-        \HUST@frontdate & \hspace{-2em} \\
-    \end{HUST@tabular}}\\
-    \vspace{1.5cm}    
-    \begin{center}
-    \parbox[t][3cm][c]{\textwidth}{\sanhao \hei \bfseries \centerline{ \HUST@authtitle}}
-    \parbox[t][3cm][c]{\textwidth}{\xiaosi[2]\HUST@authorization}\\
-    \hspace*{2em}\parbox[t][2cm][c]{\textwidth}{\xiaosi[2]\HUST@authorizationaddon}\\ \vspace{-1em}
-    \hspace*{2em}\parbox[t][2cm][c]{\textwidth}{\xiaosi[2]\HUST@authorizationcheck}\\
-    \vspace{-2cm}
-    \hspace*{2em}\parbox[t][3cm][b]{\textwidth-2em}{\xiaosi[1.5]
-    \begin{HUST@tabular}{ll}
-        \hspace{-1.5em} \HUST@authorsig & \hspace{-2em}         \vspace{0.5cm}\\
-        \hspace{-1.5em} \HUST@frontdate & \hspace{-2em} \\
-    \end{HUST@tabular}
-    \hfill
-    \begin{HUST@tabular}{ll}
-        \HUST@teachersig & \hspace{-2.4em}         \vspace{0.5cm}\\
-        \HUST@frontdate & \hspace{-2.4em} \\
-    \end{HUST@tabular}}
+        \vspace{1.5cm}
+        \parbox[t]{\textwidth}{\xiaosi[1.5]
+            \hfill
+            \begin{HUST@tabular}{ll}
+                \HUST@authorsig & \hspace{-2em} \vspace{0.5cm}\\
+                \HUST@frontdate & \hspace{-2em} \\
+            \end{HUST@tabular}
+        }
+
+        \vspace{1.5cm}
+        \parbox[t][3cm][c]{\textwidth}{\sanhao \hei \bfseries \centerline{\HUST@authtitle}}
+
+        \parbox[t][3cm][c]{\textwidth}{\xiaosi[2]\HUST@authorization}
+
+        \hspace*{2em}
+        \parbox[t][2cm][c]{\textwidth}{\xiaosi[2]\HUST@authorizationaddon}
+
+        \hspace*{2em}
+        \parbox[t][2cm][c]{\textwidth}{\xiaosi[2]\HUST@authorizationcheck}
+
+        \vspace{-2cm}
+        \hspace*{2em}
+        \parbox[t][3cm][b]{\textwidth-2em}{\xiaosi[1.5]
+            \begin{HUST@tabular}{ll}
+                \hspace{-1.5em} \HUST@authorsig & \hspace{-2em} \vspace{0.5cm}\\
+                \hspace{-1.5em} \HUST@frontdate & \hspace{-2em} \\
+            \end{HUST@tabular}
+            \hfill
+            \begin{HUST@tabular}{ll}
+                \HUST@teachersig & \hspace{-2.4em} \vspace{0.5cm}\\
+                \HUST@frontdate & \hspace{-2.4em} \\
+            \end{HUST@tabular}
+        }
     \end{center}
-    \end{center}}
+}
+
 
 % 定义封面 \makecover
-
-
 \newcommand{\makecover}{
     \pagenumbering{Roman}
     \begin{titlepage}
     \HUST@ctitlepage
-    % \clearpage\thispagestyle{empty}\HUST@defencecommittee
     \clearpage\thispagestyle{empty}\HUST@etitlepage
     \end{titlepage}
     
-    % \clearpage\thispagestyle{empty}\HUST@authorization@mk
-    % 替换版权页和独创性声明为电子版
     \ifx\HUST@declarepage\empty
-    \clearpage\thispagestyle{empty}\HUST@authorization@mk
+        \clearpage\thispagestyle{empty}\HUST@authorization@mk
     \else
-        \includepdf[pages=1]{独创性声明2.pdf}
+        \clearpage\thispagestyle{empty}
+        \includepdf[pages=1]{\HUST@declarepage} % 使用传入的参数
     \fi
     
-    \HUST@makeabstract}
+    \HUST@makeabstract
+}
+
 
 % 为了符合学校单面打印的要求，重定义 \mainmatter
 \renewcommand\mainmatter{%
@@ -1061,14 +1069,12 @@
   \@mainmattertrue
   \pagenumbering{arabic}}
 
-% 定义中英文摘要
 \newcommand{\HUST@makeabstract}{%
     % 定义中文摘要
     \clearpage
     \setcounter{page}{1}
     \phantomsection
-    \titlecontents{chapter}%重定义摘要的目录项格式
-                           %有指引线，有页码，页码无括号
+    \titlecontents{chapter}% 重定义摘要的目录项格式
            [0.0em]
            {\bfseries\hei\addvspace{6bp minus6bp}}
            {\thecontentslabel\hspace{1em}}
@@ -1078,8 +1084,9 @@
     \chapter*{\bfseries\hei\abstractname}
     \markboth{\abstractshortname}{\abstractshortname}
     \HUST@cabstract
-    \\[1em]
-    \noindent\begin{HUST@tabular}{@{}p{4em}@{}p{\textwidth-4em}} \\
+    \par % 使用 \par 或者空行代替 \\[1em]
+
+    \noindent\begin{HUST@tabular}{@{}p{4em}@{}p{\textwidth-4em}}
     {\bfseries\hei\HUST@keywords} & \HUST@ckeywords \\ 
     \end{HUST@tabular}
 
@@ -1091,14 +1098,17 @@
     \chapter*{{\bfseries Abstract}}
     \markboth{Abstract}{Abstract}
     \HUST@eabstract
-    \\[1em]
+    \par % 使用 \par 或者空行代替 \\[1em]
+
     \noindent\begin{HUST@tabular}{@{}p{5em}@{}p{\textwidth-5em}}
     {\textbf{Keywords:}} & \hspace{0.4em} \HUST@ekeywords\\
     \end{HUST@tabular}
     \disabledottedtoc%
-    }
+}
+
 
 % 定义“符号对照表”环境，可选
+%改动6
 \newenvironment{denotation}{
     %\cleardoublepage
     %\phantomsection
@@ -1129,6 +1139,7 @@
 
 
 % 定义封底的“致谢”
+%改动7
 \newenvironment{ack}{
     \clearpage
     \phantomsection
@@ -1139,9 +1150,11 @@
    {}
 
 % 定义附录及其目录项格式
+%改动8
 \let\HUST@appendix\appendix
 \renewenvironment{appendix}{%
   \HUST@appendix
+  %\gdef\@chapapp{\appendixname}~\thechapter
   \def\@makechapterhead##1{%重定义附录章节标题格式
   \vspace*{24bp}%
   \begingroup

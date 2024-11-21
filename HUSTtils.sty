@@ -6,6 +6,11 @@ like to use]
 \usepackage{amsmath}
 \usepackage{amssymb,color}
 
+% 忽略一些警告 
+\usepackage{silence}
+\WarningFilter{gensymb}{Not defining \perthousand}
+\WarningFilter{gensymb}{Not defining \micro}
+
 % pdfpages，pdf页面控制。插入独创性声明电子版
 \usepackage{pdfpages}
 
@@ -49,9 +54,9 @@ like to use]
 
 % 确定浮动对象的位置，可以使用~H，强制将浮动对象放到这里（可能效果很差）
 %\RequirePackage{float}
+\let\labelindent\relax
 \usepackage{enumitem}
 \setlist[enumerate]{align=left, labelsep=0.2pt, itemindent=4em, leftmargin=0em}
-
 \setlist[enumerate]{itemindent={4em}}
 
 % 浮动图形控制宏包。
@@ -85,6 +90,7 @@ like to use]
 \usetikzlibrary{shapes, arrows, automata}
 \usetikzlibrary{decorations.pathmorphing}
 \usetikzlibrary{decorations.pathreplacing}
+
 
 % for Graphviz
 \usepackage{dot2texi}
