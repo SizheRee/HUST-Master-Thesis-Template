@@ -14,13 +14,12 @@ like to use]
 % pdfpages，pdf页面控制。插入独创性声明电子版
 \usepackage{pdfpages}
 
-% 伪代码环境设置
+% ===========伪代码环境设置==============
 \usepackage[linesnumbered,  ruled,  vlined]{algorithm2e}
 \usepackage{algpseudocode}
 % 伪代码输入输出不要有缩进
 \SetKwInput{KwIn}{\hspace{-1.5em}输入}
 \SetKwInput{KwOut}{\hspace{-1.5em}输出}
-
 
 % 将arg设置为等宽字体且不需要加粗
 \SetArgSty{texttt}
@@ -28,9 +27,6 @@ like to use]
 % 减少伪代码中的空行
 \SetAlgoNoEnd
 \DontPrintSemicolon
-% \makeatletter
-% \newcommand{\RemoveAlgoShortEndLine}{\algocf@addskiptotal@shortendline{}}
-% \makeatother
 
 \renewcommand{\algorithmcfname}{算法}
 \usepackage{chngcntr}
@@ -46,7 +42,7 @@ like to use]
 \sethlcolor{hl}
 \usepackage{natbib}
 \newcommand{\lcite}[1]{{\setcitestyle{numbers,square}\cite{#1}}}
-
+% ==================================================
 
 % 不同于~|\mathcal| or |\mathfrak| 之类的英文花体字体
 %\RequirePackage{mathrsfs}
@@ -109,9 +105,6 @@ like to use]
 
 % 给自定义的宏后面自动加空白
 \RequirePackage{xspace}
-
-% 定义证明最后是黑色方块
-% \renewcommand{\qedsymbol}{\ensuremath{\blacksquare}}
 
 % 定义自己常用的东西
 \newcommand{\Nat}{{\mathbb N}}
