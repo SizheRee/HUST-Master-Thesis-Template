@@ -287,9 +287,10 @@ FUNCTION {format.names}
   numnames 'namesleft :=
     { namesleft #0 > }
     { s nameptr
-      % "{f.~}{ll}"
-      % 改动，华中科技大学2023年要求修改为全名格式
-      "{ff~}{ll}" 
+      "{f.~}{ll}"
+      % 改动，华中科技大学2023年要求修改为全名格式   
+      % 20250309fix: 2024 AIA官网下载的模板还是要求名字缩写
+      % "{ff~}{ll}" 
       format.name$
       %bibinfo bibinfo.check
       't :=
@@ -993,8 +994,9 @@ FUNCTION {masterthesis.type}
 FUNCTION {mastersthesis}
 { output.bibitem
   format.authors "author" add.period$ output.check
-  new.block
-  format.title remove.dots ": " * masterthesis.type * output
+  % 20250309 fix：论文类型前面不要冒号
+  % format.title remove.dots ": " * masterthesis.type * output
+  format.title remove.dots "" * masterthesis.type * output
   new.block
   format.address.school output
   %format.madd "address" output.check
@@ -1030,8 +1032,9 @@ FUNCTION {phdthesis.type}
 FUNCTION {phdthesis}
 { output.bibitem
   format.authors "author" add.period$ output.check
-  new.block
-  format.title remove.dots ": " * phdthesis.type * output
+  % 20250309 fix：论文类型前面不要冒号
+  % format.title remove.dots ": " * phdthesis.type * output
+  format.title remove.dots "" * phdthesis.type * output
   new.block
   format.address.school output
   %address output
